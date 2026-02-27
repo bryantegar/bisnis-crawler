@@ -52,12 +52,30 @@ def fetch_articles(max_pages=1):
 
     links = get_article_links()
     articles = []
+    skipped = 0
+
+    for link in links:
+        try:
+            data = parse_article(link)
+            articles.append(data)
+        except Exception:
+            skipped += 1
+
+    print(f"Fetched {len(links)} links")
+    print(f"Skipped {skipped} articles due to parsing issues")
+    print(f"Saved {len(articles)} articles")
+
+    return articles
 
     for link in links:
         try:
             data = parse_article(link)
             articles.append(data)
         except Exception as e:
-            logging.warning(f"Skip article: {e}")
+            skipped += 1
 
-    return articles
+        print(f"Fetched {len(links)} links")
+        print(f"Skipped {skipped} articles due to parsing issues")
+        print(f"Saved {len(articles)} articles")
+
+        return articles
